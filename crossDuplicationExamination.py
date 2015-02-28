@@ -62,7 +62,7 @@ def processDetectionsFile(fileName, number2Examine):
     return toReturn
 
 
-if len(sys.argv)<3:
+if len(sys.argv)<4:
     print ""
     print "ERROR in the input to the python script call"
     print "ERROR, please use the path to the detections file as first parameter to this function"
@@ -70,19 +70,35 @@ if len(sys.argv)<3:
     print ""
 else:
     detectionsFileName = sys.argv[1]
-    numberToExamine = int(sys.argv[2])
+    detectionsFileName2 = sys.argv[2]
+    numberToExamine = int(sys.argv[3])
     (dictionary, totalNumber) = processDetectionsFile(detectionsFileName,numberToExamine)
+    (dictionary2, totalNumber) = processDetectionsFile(detectionsFileName2,numberToExamine)
+
     print "Number of unique entries: "+str(len(dictionary.keys()))
     print "Nuber of total entries: "+str(totalNumber)
+
+    print "Number of second unique entries: "+str(len(dictionary.keys()))
+    print "Nuber of second total entries: "+str(totalNumber)
+
     sum = float(0)
     mone = 0
+
     for k in dictionary:
         mone +=1
         if (mone % 1000000==0):
             print "Another million used"
-            #break
+
         observed = dictionary[k]
         p_of_k = float(observed)/float(totalNumber)
-        p_of_k_square = p_of_k*p_of_k
-        sum += p_of_k_square
+        if k in dictionary2:
+            observed2 = dictionary2[k]
+            p_of_k_2 = float(observed2)/float(totalNumber)
+            p_of_k_square = p_of_k*p_of_k_2
+            sum += p_of_k_square
+        #else:
+        #    print "NOT PRESENT!!! " + str(k)
+
+        #if sum>0:
+        #    break
     print "The sigma of squared probabilities = "+str(sum)
