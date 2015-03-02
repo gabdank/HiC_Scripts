@@ -3,9 +3,10 @@
 # record the numbers of interactions and create a distribution of numbers
 # repeat the same for randomly selected sites in the genome - with the same lengths of the original transcripts
 # may be store as well the relative location of the random transcripts
+import random
 
-chrLengthDict = {"chrI":15072423, "chrII":15279345,"chrIII":13783700,"chrIV":17493793,"chrV":20924149,"chrX":17718866,"chrM":13794}
-chrCumulativeLengthsDictionary = {"chrI":0, "chrII":15072423,"chrIII":30351768,"chrIV":44135468,"chrV":61629261,"chrX":82553410,"chrM":100272276}
+chrLengthDict = {"chrI":15072423, "chrII":15279345,"chrIII":13783700,"chrIV":17493793,"chrV":20924149,"chrX":17718866,"chrM":13794, "chrMtDNA":13794}
+chrCumulativeLengthsDictionary = {"chrI":0, "chrII":15072423,"chrIII":30351768,"chrIV":44135468,"chrV":61629261,"chrX":82553410,"chrM":100272276, "chrMtDNA":100272276}
 
 def detectionsFileReadIn(fileName, dictionary):
     f = open(fileName,"r")
@@ -56,9 +57,31 @@ transcriptFile.close()
 print "Number of transcripts was:"+str(len(transcriptDictionary))
 
 #Looking into length distribution of transcripts
+transcriptLengths = {}
+binSize = 25
+for name in transcriptDictionary:
+    (chr,start,end) = transcriptDictionary[name]
+    delta = end-start+1
+    binnedDelta = delta/binSize
+    if not binnedDelta in transcriptLengths:
+        transcriptLengths[binnedDelta]=1
+    else:
+        transcriptLengths[binnedDelta]+=1
+
+randomPseudoTranscripts = {}
+for name in transcriptDictionary:
+    (chr,start,end) = transcriptDictionary[name]
+    delta = end-start+1
+    upperL = chrLengthDict[chr]-delta
+    randoStart = random.randint(1,upperL)
+    randoEnd = randoStart+delta -1
+    randomPseudoTranscripts[name]=(chr,randoStart, randoEnd)
+
+
+# getting to the detections counts
 
 dict = {}
-detectionsFileReadIn("/home/gabdank/Documents/January28/GLP_DPN/deduped.filtered.detections",dict)
+detectionsFileReadIn("/home/gabdank/Documents/January28/GLP_AVA/deduped.filtered.detections",dict)
 
 flankRange = 1000
 contactsCounter = 0
@@ -66,6 +89,9 @@ histogram = {}
 
 for transcript in transcriptDictionary:
     (chromo,start,end) = transcriptDictionary[transcript]
+#for transcript in randomPseudoTranscripts:
+#    (chromo,start,end) = randomPseudoTranscripts[transcript]
+
     leftStart = start-flankRange
     leftEnd = start+flankRange+1
     rightStart = end-flankRange
@@ -76,10 +102,7 @@ for transcript in transcriptDictionary:
         k = (chromo,x)
         if k in dict:
             score = dict[k][1]
-            #print "k= "+str(k) +"\tscore= "+str(dict[k])
             mone += score
-    #if mone !=0:
-    #    print "MONE="+str(mone)
 
     if not mone in histogram:
         histogram[mone]=1
@@ -90,3 +113,4 @@ outputF = open("/home/gabdank/Documents/January28/histogra","w")
 for juncNum in sorted(histogram.keys()):
     outputF.write(str(juncNum)+"\t"+str(histogram[juncNum])+"\n")
 outputF.close()
+
