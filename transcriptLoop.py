@@ -4,5 +4,5 @@
 # repeat the same for randomly selected sites in the genome - with the same lengths of the original transcripts
 # may be store as well the relative location of the random transcripts
 
-
+print "hello"
 
