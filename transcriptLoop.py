@@ -67,7 +67,18 @@ detectionsFileReadIn("/home/gabdank/Documents/January28/GLP_AVA/deduped.filtered
     print dict[x]
     break
 '''
+flankRange = 3
+
 for transcript in transcriptDictionary:
+
     print transcript
     print transcriptDictionary[transcript]
+    (chromo,start,end) = transcriptDictionary[transcript]
+
+    leftStart = start-flankRange
+    leftEnd = start+flankRange
+    rightStart = end-flankRange
+    rightEnd = end+flankRange
+    for x in range(leftStart,leftEnd):
+        print x
     break
