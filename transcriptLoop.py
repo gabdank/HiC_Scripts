@@ -60,25 +60,26 @@ print "Number of transcripts was:"+str(len(transcriptDictionary))
 dict = {}
 detectionsFileReadIn("/home/gabdank/Documents/January28/GLP_AVA/deduped.filtered.detections",dict)
 
-#print len(dict)
-
-'''for x in dict:
-    print x
-    print dict[x]
-    break
-'''
-flankRange = 3
+flankRange = 2000
+contactsCounter = 0
+histogram = {}
 
 for transcript in transcriptDictionary:
-
-    print transcript
-    print transcriptDictionary[transcript]
     (chromo,start,end) = transcriptDictionary[transcript]
-
     leftStart = start-flankRange
-    leftEnd = start+flankRange
+    leftEnd = start+flankRange+1
     rightStart = end-flankRange
-    rightEnd = end+flankRange
+    rightEnd = end+flankRange+1
     for x in range(leftStart,leftEnd):
-        print x
-    break
+        k = (chromo,leftStart)
+        if k in dict:
+            score = dict[k][1]
+            if not score in histogram:
+                histogram[score]=1
+            else:
+                histogram[score]+=1
+
+outputF = open("/home/gabdank/Documents/January28/histogra","w")
+for juncNum in sorted(histogram.keys()):
+    outputF.write(str(juncNum)+"\t"+str(histogram[juncNum])+"\n")
+outputF.close()
