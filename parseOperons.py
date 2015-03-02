@@ -1,8 +1,3 @@
-# parse transcripts ensemble file and then use the TSS and TES to define the interesting
-# regions to count interactions from
-# record the numbers of interactions and create a distribution of numbers
-# repeat the same for randomly selected sites in the genome - with the same lengths of the original transcripts
-# may be store as well the relative location of the random transcripts
 import random
 
 chrLengthDict = {"chrI":15072423, "chrII":15279345,"chrIII":13783700,"chrIV":17493793,"chrV":20924149,"chrX":17718866,"chrM":13794, "chrMtDNA":13794}
@@ -41,36 +36,62 @@ def detectionsFileReadIn(fileName, dictionary):
     f.close()
 
 
+transcriptsDict = {}
+detF = open("/home/gabdank/Documents/January28/transcripts/ensembel.transcripts","r")
+for l in detF:    
+    arr = l.strip().split()
+    transcriptName = arr[0]
+    chromosoma = "chr"+arr[-3]
+    start = int(arr[-2])
+    end = int(arr[-1])
+    if not transcriptName in transcriptsDict:
+        transcriptsDict[transcriptName]=(chromosoma, start,end)
+        
+detF.close()
+print "The length of transcripts dictionary is:"+str(len(transcriptsDict))
 
 
-transcriptFile = open("/home/gabdank/Documents/January28/transcripts/ensembel.transcripts","r")
-transcriptDictionary = {}
-for l in transcriptFile:
-    transcriptArray = l.strip().split()
-    transcriptName = transcriptArray[0]
-    transcriptChromosome = "chr"+transcriptArray[2]
-    transcriptStart = int(transcriptArray[3])
-    transcriptEnd = int(transcriptArray[4])
-    if not transcriptName in transcriptDictionary:
-        transcriptDictionary[transcriptName] = (transcriptChromosome,transcriptStart,transcriptEnd)
-transcriptFile.close()
-print "Number of transcripts was:"+str(len(transcriptDictionary))
+histo = {}
+operonsDict = {}
+opF = open("operons.list","r")
+outOper = open("operonCoords.list","w")
+for l in opF:    
+    #print l
+    operonStart = 100000000
+    operonEnd = -1
+    
+    arr = l.strip().split()
+        
+    flag = False
+    
+    for x in arr:
+        if x in transcriptsDict:
+            flag = True
+            if operonStart>transcriptsDict[x][1]:
+                operonStart=transcriptsDict[x][1]
+            if operonEnd<transcriptsDict[x][2]:
+                operonEnd=transcriptsDict[x][2]
+            operonChr = transcriptsDict[x][0]
+    if flag==True:
+        key = (operonChr, operonStart,operonEnd)            
+        operonsDict[key]=1    
+        operonLength = operonEnd-operonStart+1
+        binned = operonLength/100
+        if not binned in histo:
+            histo[binned]=0
+        histo[binned]+=1
+        if operonLength>4000:        
+            outOper.write(operonChr+"\t"+str(operonStart)+"\t"+str(operonEnd)+"\n")
 
-#Looking into length distribution of transcripts
-transcriptLengths = {}
-binSize = 25
-for name in transcriptDictionary:
-    (chr,start,end) = transcriptDictionary[name]
-    delta = end-start+1
-    binnedDelta = delta/binSize
-    if not binnedDelta in transcriptLengths:
-        transcriptLengths[binnedDelta]=1
-    else:
-        transcriptLengths[binnedDelta]+=1
+opF.close()
+outOper.close()
+
+print "number of operons is "+str(len(operonsDict))
+
 
 randomPseudoTranscripts = {}
-for name in transcriptDictionary:
-    (chr,start,end) = transcriptDictionary[name]
+for name in operonsDict.keys():
+    (chr,start,end) = name
     delta = end-start+1
     upperL = chrLengthDict[chr]-delta
     randoStart = random.randint(1,upperL)
@@ -78,19 +99,19 @@ for name in transcriptDictionary:
     randomPseudoTranscripts[name]=(chr,randoStart, randoEnd)
 
 
-# getting to the detections counts
+
 
 dict = {}
 detectionsFileReadIn("/home/gabdank/Documents/January28/N2_DPN/deduped.filtered.detections",dict)
 
+
 flankRange = 1000
 histogram = {}
 
-for transcript in transcriptDictionary:
-    (chromo,start,end) = transcriptDictionary[transcript]
-#for transcript in randomPseudoTranscripts:
-#    (chromo,start,end) = randomPseudoTranscripts[transcript]
-
+#for x in operonsDict.keys():
+#    (chromo,start,end)=x
+for x in randomPseudoTranscripts:
+    (chromo,start,end) = randomPseudoTranscripts[x]
     leftStart = start-flankRange
     leftEnd = start+flankRange+1
     rightStart = end-flankRange
@@ -108,8 +129,7 @@ for transcript in transcriptDictionary:
     else:
         histogram[mone]+=1
 
-outputF = open("/home/gabdank/Documents/January28/histogra","w")
+outputF = open("/home/gabdank/Documents/January28/histogra.operon.rand","w")
 for juncNum in sorted(histogram.keys()):
     outputF.write(str(juncNum)+"\t"+str(histogram[juncNum])+"\n")
 outputF.close()
-
