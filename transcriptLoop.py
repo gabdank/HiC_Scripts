@@ -58,9 +58,9 @@ print "Number of transcripts was:"+str(len(transcriptDictionary))
 #Looking into length distribution of transcripts
 
 dict = {}
-detectionsFileReadIn("/home/gabdank/Documents/January28/GLP_AVA/deduped.filtered.detections",dict)
+detectionsFileReadIn("/home/gabdank/Documents/January28/GLP_DPN/deduped.filtered.detections",dict)
 
-flankRange = 2000
+flankRange = 1000
 contactsCounter = 0
 histogram = {}
 
@@ -70,14 +70,21 @@ for transcript in transcriptDictionary:
     leftEnd = start+flankRange+1
     rightStart = end-flankRange
     rightEnd = end+flankRange+1
+
+    mone = 0
     for x in range(leftStart,leftEnd):
-        k = (chromo,leftStart)
+        k = (chromo,x)
         if k in dict:
             score = dict[k][1]
-            if not score in histogram:
-                histogram[score]=1
-            else:
-                histogram[score]+=1
+            #print "k= "+str(k) +"\tscore= "+str(dict[k])
+            mone += score
+    #if mone !=0:
+    #    print "MONE="+str(mone)
+
+    if not mone in histogram:
+        histogram[mone]=1
+    else:
+        histogram[mone]+=1
 
 outputF = open("/home/gabdank/Documents/January28/histogra","w")
 for juncNum in sorted(histogram.keys()):
