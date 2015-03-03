@@ -93,6 +93,7 @@ detectionsFileReadIn("/media/gabdank/Disk3/HiC/pipeline/HISEQ_FED_AVA_2/deduped.
 flankRange = 1000
 histogram = {}
 
+
 for transcript in transcriptDictionary:
     (chromo,start,end) = transcriptDictionary[transcript]
 #for transcript in randomPseudoTranscripts:
