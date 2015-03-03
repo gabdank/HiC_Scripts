@@ -68,6 +68,7 @@ for name in transcriptDictionary:
     else:
         transcriptLengths[binnedDelta]+=1
 
+
 randomPseudoTranscripts = {}
 for name in transcriptDictionary:
     (chr,start,end) = transcriptDictionary[name]
@@ -81,7 +82,13 @@ for name in transcriptDictionary:
 # getting to the detections counts
 
 dict = {}
-detectionsFileReadIn("/home/gabdank/Documents/January28/N2_DPN/deduped.filtered.detections",dict)
+#detectionsFileReadIn("/home/gabdank/Documents/January28/N2_DPN/deduped.filtered.detections",dict)
+
+detectionsFileReadIn("/media/gabdank/Disk3/HiC/pipeline/HISEQ_FED_AVA_1/deduped.filtered.detections",dict)
+detectionsFileReadIn("/media/gabdank/Disk3/HiC/pipeline/HISEQ_FED_AVA_2/deduped.filtered.detections",dict)
+#detectionsFileReadIn("/media/gabdank/Disk3/HiC/pipeline/HISEQ_FED_DPN_1/deduped.filtered.detections",dict)
+#detectionsFileReadIn("/media/gabdank/Disk3/HiC/pipeline/HISEQ_FED_DPN_1/deduped.filtered.detections",dict)
+
 
 flankRange = 1000
 histogram = {}
