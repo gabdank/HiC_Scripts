@@ -82,7 +82,9 @@ else:
             print "Another million used"
             #break
         observed = dictionary[k]
-        p_of_k = float(observed)/float(totalNumber)
-        p_of_k_square = p_of_k*p_of_k
-        sum += p_of_k_square
+        if observed>1:
+            nominator =float(observed)*float(observed-1)
+            denominator = float(totalNumber)*float(totalNumber-1)
+            p_of_k_square = nominator/denominator
+            sum += p_of_k_square
     print "The sigma of squared probabilities = "+str(sum)
