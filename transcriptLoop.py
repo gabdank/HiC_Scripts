@@ -101,7 +101,6 @@ detectionsFileReadIn("/home/gabdank/Documents/January28/N2_DPN/deduped.filtered.
 flankRange = 500
 histogram = {}
 
-
 for transcript in transcriptDictionary:
     (chromo,start,end) = transcriptDictionary[transcript]
     #for transcript in randomPseudoTranscripts:
