@@ -51,8 +51,10 @@ for l in transcriptFile:
     transcriptChromosome = "chr"+transcriptArray[2]
     transcriptStart = int(transcriptArray[3])
     transcriptEnd = int(transcriptArray[4])
-    if not transcriptName in transcriptDictionary:
-        transcriptDictionary[transcriptName] = (transcriptChromosome,transcriptStart,transcriptEnd)
+    delta = abs (transcriptEnd-transcriptStart)
+    if delta>2000:
+        if not transcriptName in transcriptDictionary:
+            transcriptDictionary[transcriptName] = (transcriptChromosome,transcriptStart,transcriptEnd)
 transcriptFile.close()
 print "Number of transcripts was:"+str(len(transcriptDictionary))
 
@@ -82,8 +84,8 @@ for name in transcriptDictionary:
 # getting to the detections counts
 
 dict = {}
-detectionsFileReadIn("/home/gabdank/Documents/January28/GLP_AVA/deduped.filtered.detections",dict)
-detectionsFileReadIn("/home/gabdank/Documents/January28/GLP_DPN/deduped.filtered.detections",dict)
+detectionsFileReadIn("/home/gabdank/Documents/January28/N2_AVA/deduped.filtered.detections",dict)
+detectionsFileReadIn("/home/gabdank/Documents/January28/N2_DPN/deduped.filtered.detections",dict)
 
 #detectionsFileReadIn("/media/gabdank/Disk3/HiC/pipeline/HISEQ_FED_AVA_1/deduped.filtered.detections",dict)
 #detectionsFileReadIn("/media/gabdank/Disk3/HiC/pipeline/HISEQ_FED_AVA_2/deduped.filtered.detections",dict)
@@ -96,14 +98,14 @@ detectionsFileReadIn("/home/gabdank/Documents/January28/GLP_DPN/deduped.filtered
 #etectionsFileReadIn("/media/gabdank/Disk3/HiC/pipeline/HISEQ_STARVED_DPN_2/deduped.filtered.detections",dict)
 
 
-flankRange = 1000
+flankRange = 500
 histogram = {}
 
 
 for transcript in transcriptDictionary:
     (chromo,start,end) = transcriptDictionary[transcript]
-#for transcript in randomPseudoTranscripts:
-#    (chromo,start,end) = randomPseudoTranscripts[transcript]
+    #for transcript in randomPseudoTranscripts:
+    #    (chromo,start,end) = randomPseudoTranscripts[transcript]
 
     leftStart = start-flankRange
     leftEnd = start+flankRange+1
@@ -122,7 +124,7 @@ for transcript in transcriptDictionary:
     else:
         histogram[mone]+=1
 
-outputF = open("/home/gabdank/Documents/January28/histogra.glp.ava.dpn","w")
+outputF = open("/home/gabdank/Documents/January28/histogramma","w")
 for juncNum in sorted(histogram.keys()):
     outputF.write(str(juncNum)+"\t"+str(histogram[juncNum])+"\n")
 outputF.close()
