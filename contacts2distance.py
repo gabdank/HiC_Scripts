@@ -8,11 +8,16 @@ import numpy as np
 '''
 # Starting from matrix of ONE chromosome
 '''
-def matrixToChart(binSize, valuesMatrix, chartFileName):
+
+def median(lst):
+    return np.median(np.array(lst))
+
+def singleChromosomeMatrixToChart(binSize, valuesMatrix, chartFileName):
     distanceDict = {}
     rowIndex = 0
     colIndex = 0
     length = len(valuesMatrix[0])
+    totalNumberOfJunctions = 0
     while (rowIndex<length):
         colIndex = rowIndex
         distance = binSize
@@ -20,12 +25,14 @@ def matrixToChart(binSize, valuesMatrix, chartFileName):
             if not distance in distanceDict:
                 distanceDict[distance]=[]        
             distanceDict[distance].append(valuesMatrix[rowIndex,colIndex])
+            totalNumberOfJunctions += valuesMatrix[rowIndex,colIndex]
             colIndex +=1
             distance += binSize        
         rowIndex +=1
+
     f = open(chartFileName,"w")
     for k in sorted(distanceDict.keys()):
-        f.write(str(k)+"\t"+str(np.median(np.array(distanceDict[k])))+"\n")      
+        f.write(str(k) +"\t" + str(median(distanceDict[k])/float(totalNumberOfJunctions))+"\n")
     f.close()
     
 
@@ -66,5 +73,19 @@ def junctionsFileToChart(filteredJunctionsFileName,chartFileName,binSize):
         outputFile.write(str(binnedDistance*binSize) + "\t"+str(float(dictionaryOfDistances[binnedDistance])/float(junctionsCounter))+"\n")
     outputFile.close()
     
-junctionsFile = "GLP_AVA/deduped.filtered.detections"
-junctionsFileToChart(junctionsFile,"zopa_glp_ava",5000)
+#junctionsFile = "GLP_AVA/deduped.filtered.detections"
+#junctionsFileToChart(junctionsFile,"zopa_glp_ava",5000)
+
+matrixFile = "/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/n2.dpn.raw.100K.noUpperLine.noFirstTwoCols"
+chartFile = "/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/raw.100K.chart"
+oneMatrixFile = open(matrixFile,"r")
+
+hugeL = []
+for l in oneMatrixFile:
+    arr = [float(i) for i in l.strip().split()]
+    hugeL.append(arr)
+one = np.array(hugeL)
+
+oneMatrixFile.close()
+
+singleChromosomeMatrixToChart(100000, one, chartFile)
