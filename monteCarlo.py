@@ -8,6 +8,8 @@ avaSitesFile.close()
 restrDict = {}
 
 
+
+
 # generate junctions list of a given length
 
 # generate matrix of a given chromosome with a given resolution
