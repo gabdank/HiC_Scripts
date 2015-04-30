@@ -76,8 +76,8 @@ def junctionsFileToChart(filteredJunctionsFileName,chartFileName,binSize):
 #junctionsFile = "GLP_AVA/deduped.filtered.detections"
 #junctionsFileToChart(junctionsFile,"zopa_glp_ava",5000)
 
-matrixFile = "/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/n2.dpn.raw.100K.noUpperLine.noFirstTwoCols"
-chartFile = "/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/raw.100K.chart"
+matrixFile = "/media/gabdank/Backup/NextSeq/AF_SOL_597/GLP_DPN/glp.dpn.chrIII.raw.2K.noUpperLine.noFirstTwoCols"
+chartFile = "/media/gabdank/Backup/NextSeq/AF_SOL_597/GLP_DPN/glp.dpn.chrIII.raw.5K.chart"
 oneMatrixFile = open(matrixFile,"r")
 
 hugeL = []
@@ -88,4 +88,4 @@ one = np.array(hugeL)
 
 oneMatrixFile.close()
 
-singleChromosomeMatrixToChart(100000, one, chartFile)
+singleChromosomeMatrixToChart(5000, one, chartFile)
