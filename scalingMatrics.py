@@ -23,7 +23,7 @@ def updateMinMax(mat, minV, maxV):
     mat[mat>maxV] = maxV
     mat[mat<minV] = minV
     return mat
-
+'''
 fileName="/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/n2.dpn.50000.chrX.norm.noUpperLine.noFirstTwoCols"
 chrX = findMaxInMatrix(fileName)
 fileName="/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/n2.dpn.50000.chrV.norm.noUpperLine.noFirstTwoCols"
@@ -93,3 +93,35 @@ genomeFile = "/media/gabdank/Backup/NextSeq/AF_SOL_597/GLP_DPN/genome.step2.txt"
 genome= findMaxInMatrix(genomeFile)
 updateMinMax(genome,0,1000)
 np.savetxt('/media/gabdank/Backup/NextSeq/AF_SOL_597/GLP_DPN/genome.step2.mod.txt',genome,delimiter="\t")
+'''
+
+simpleI = "/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/n2.dpn.chrI.simpleNorm.50K.noUpperLine.noFirstTwoCols"
+combI = findMaxInMatrix(simpleI)
+updateMinMax(combI,-4,4)
+np.savetxt('/media/gabdank/Backup/NextSeq/AF_SOL_597/n2.simple.chrI.out',combI,delimiter="\t")
+
+simpleX = "/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/n2.dpn.chrX.simpleNorm.50K.noUpperLine.noFirstTwoCols"
+combX = findMaxInMatrix(simpleX)
+updateMinMax(combX,-4,4)
+np.savetxt('/media/gabdank/Backup/NextSeq/AF_SOL_597/n2.simple.chrX.out',combX,delimiter="\t")
+
+simpleI = "/media/gabdank/Backup/NextSeq/AF_SOL_597/GLP_DPN/glp.dpn.chrI.simpleNorm.50K.noUpperLine.noFirstTwoCols"
+combI = findMaxInMatrix(simpleI)
+updateMinMax(combI,-4,4)
+np.savetxt('/media/gabdank/Backup/NextSeq/AF_SOL_597/glp.simple.chrI.out',combI,delimiter="\t")
+
+simpleX = "/media/gabdank/Backup/NextSeq/AF_SOL_597/GLP_DPN/glp.dpn.chrX.simpleNorm.50K.noUpperLine.noFirstTwoCols"
+combX = findMaxInMatrix(simpleX)
+updateMinMax(combX,-4,4)
+np.savetxt('/media/gabdank/Backup/NextSeq/AF_SOL_597/glp.simple.chrX.out',combX,delimiter="\t")
+
+
+genomeFile = "/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/n2.dpn.genome.simpleNorm.100K.noUpperLine.noFirstTwoCols"
+genome= findMaxInMatrix(genomeFile)
+updateMinMax(genome,-5,5)
+np.savetxt('/media/gabdank/Backup/NextSeq/AF_SOL_597/N2_DPN/genome.simpleNorm',genome,delimiter="\t")
+
+genomeFile = "/media/gabdank/Backup/NextSeq/AF_SOL_597/GLP_DPN/glp.dpn.genome.simpleNorm.100K.noUpperLine.noFirstTwoCols"
+genome= findMaxInMatrix(genomeFile)
+updateMinMax(genome,-5,5)
+np.savetxt('/media/gabdank/Backup/NextSeq/AF_SOL_597/GLP_DPN/genome.simpleNorm',genome,delimiter="\t")
